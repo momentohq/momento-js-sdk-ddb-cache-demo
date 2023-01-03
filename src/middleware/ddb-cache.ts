@@ -8,7 +8,7 @@ import {
 const CommandCacheAllowList = [
     'GetItemCommand'
 ];
-const cacheName = 'cache';
+const cacheName = 'aws-sdk-middleware-cache';
 
 const authToken = process.env.MOMENTO_AUTH_TOKEN;
 if (!authToken) {
@@ -25,22 +25,23 @@ const momento = new SimpleCacheClient(authToken, defaultTtl, {
 export const getCachingMiddleware = () => {
     return {
         applyToStack: stack => {
-            // Middleware added to mark start and end of an complete API call.
             stack.add(
-                (next, context) => async args => {
+                (next) => async args => {
                     // Check if we should cache this command
                     if (CommandCacheAllowList.includes(args.constructor.name)) {
-                        // Check and see if we already have item in cache
                         const itemCacheKey = getCacheKey(args);
-                        const item = await momento.get(cacheName, itemCacheKey);
-                        if (item.status === CacheGetStatus.Hit) {
-                            console.log('found item in cache skipping ddb look up');
-                            return {
-                                output: {
-                                    $metadata: {},
-                                    Item: JSON.parse(item.text()),
-                                },
-                            };
+                        if(!args.input.ConsistentRead){
+                            // Check and see if we already have item in cache
+                            const item = await momento.get(cacheName, itemCacheKey);
+                            if (item.status === CacheGetStatus.Hit) {
+                                // If item found in cache return result and skip DDB call
+                                return {
+                                    output: {
+                                        $metadata: {},
+                                        Item: JSON.parse(item.text()),
+                                    },
+                                };
+                            }
                         }
 
                         // If we didn't get cache hit let normal call path go through and then try cache result for next time
