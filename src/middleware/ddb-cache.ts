@@ -64,5 +64,5 @@ export const getCachingMiddleware = () => {
 }
 
 function getCacheKey(args) {
-    return args.input.TableNam + JSON.stringify(args.input.Key);
+    return args.input.TableName + JSON.stringify(args.input.Key);
 }
