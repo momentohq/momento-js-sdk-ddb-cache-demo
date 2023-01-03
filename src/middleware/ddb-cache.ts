@@ -15,7 +15,7 @@ if (!authToken) {
     throw new Error('Missing required environment variable MOMENTO_AUTH_TOKEN');
 }
 
-const defaultTtl = 60;
+const defaultTtl = 300;
 const momento = new SimpleCacheClient(authToken, defaultTtl, {
     loggerOptions: {
         level: LogLevel.INFO,
