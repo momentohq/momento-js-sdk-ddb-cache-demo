@@ -1,5 +1,5 @@
 import {
-    CacheGetStatus,
+    CacheGet,
     LogFormat,
     LogLevel,
     SimpleCacheClient,
@@ -8,7 +8,7 @@ import {
 const CommandCacheAllowList = [
     'GetItemCommand'
 ];
-const cacheName = 'aws-sdk-middleware-cache';
+const cacheName = 'default';
 
 const authToken = process.env.MOMENTO_AUTH_TOKEN;
 if (!authToken) {
@@ -32,13 +32,13 @@ export const getCachingMiddleware = () => {
                         const itemCacheKey = getCacheKey(args);
                         if(!args.input.ConsistentRead){
                             // Check and see if we already have item in cache
-                            const item = await momento.get(cacheName, itemCacheKey);
-                            if (item.status === CacheGetStatus.Hit) {
+                            const getResponse = await momento.get(cacheName, itemCacheKey);
+                            if (getResponse instanceof CacheGet.Hit) {
                                 // If item found in cache return result and skip DDB call
                                 return {
                                     output: {
                                         $metadata: {},
-                                        Item: JSON.parse(item.text()),
+                                        Item: JSON.parse(getResponse.valueString()),
                                     },
                                 };
                             }

@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.241.0",
-    "@gomomento/sdk": "^0.15.2",
+    "@aws-sdk/lib-dynamodb": "^3.241.0",
+    "@gomomento/sdk": "^0.16.0",
     "aws-sdk": "*",
     "uuid": "*"
   }
