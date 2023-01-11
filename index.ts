@@ -1,9 +1,10 @@
-import { IResource, LambdaIntegration, MockIntegration, PassthroughBehavior, RestApi } from 'aws-cdk-lib/aws-apigateway';
-import { AttributeType, Table } from 'aws-cdk-lib/aws-dynamodb';
-import { Runtime } from 'aws-cdk-lib/aws-lambda';
-import { App, Stack, RemovalPolicy } from 'aws-cdk-lib';
-import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs';
-import { join } from 'path'
+import {IResource, LambdaIntegration, MockIntegration, PassthroughBehavior, RestApi} from 'aws-cdk-lib/aws-apigateway';
+import {AttributeType, StreamViewType, Table} from 'aws-cdk-lib/aws-dynamodb';
+import {Runtime, StartingPosition} from 'aws-cdk-lib/aws-lambda';
+import {App, RemovalPolicy, Stack} from 'aws-cdk-lib';
+import {NodejsFunction, NodejsFunctionProps} from 'aws-cdk-lib/aws-lambda-nodejs';
+import {DynamoEventSource} from 'aws-cdk-lib/aws-lambda-event-sources';
+import {join} from 'path'
 
 export class ApiLambdaCrudDynamoDBStack extends Stack {
   constructor(app: App, id: string) {
@@ -22,6 +23,7 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
        * DESTROY, cdk destroy will delete the table (even if it has data in it)
        */
       removalPolicy: RemovalPolicy.DESTROY, // NOT recommended for production code
+      stream: StreamViewType.NEW_IMAGE
     });
 
     const nodeJsFunctionProps: NodejsFunctionProps = {
@@ -65,6 +67,12 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
       ...nodeJsFunctionProps,
     });
 
+    // Stream processors
+    const cacheUpdateStream = new NodejsFunction(this, 'streamProcessorFunction', {
+      entry:join(__dirname, 'src/lambdas', 'stream-cacher.ts'),
+      ...nodeJsFunctionProps,
+    });
+
     // Grant the Lambda function read access to the DynamoDB table
     dynamoTable.grantReadWriteData(getAllLambda);
     dynamoTable.grantReadWriteData(getOneLambda);
@@ -72,6 +80,11 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
     dynamoTable.grantReadWriteData(createOneLambda);
     dynamoTable.grantReadWriteData(updateOneLambda);
     dynamoTable.grantReadWriteData(deleteOneLambda);
+
+
+    cacheUpdateStream.addEventSource(new DynamoEventSource(dynamoTable, {
+      startingPosition: StartingPosition.LATEST,
+    }));
 
     // Integrate the Lambda functions with the API Gateway resource
     const getAllIntegration = new LambdaIntegration(getAllLambda);
