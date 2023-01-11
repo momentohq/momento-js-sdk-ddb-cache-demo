@@ -24,7 +24,6 @@ const momento = new SimpleCacheClient(config.authToken, config.defaultTtl, {
 export function cachingMiddleware(): InitializeMiddleware<any, any> {
     return <Output extends MetadataBearer>(next: InitializeHandler<any, Output>): InitializeHandler<any, Output> =>
         async (args: InitializeHandlerArguments<any>): Promise<InitializeHandlerOutput<Output>> => {
-            console.log(JSON.stringify(args));
             // Check if we should cache this command
             if (CommandCacheAllowList.includes(args.constructor.name)) {
                 const itemCacheKey = args.input.TableName + normalizeKeysFromRequestValue(args.input.Key);

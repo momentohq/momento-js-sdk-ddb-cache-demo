@@ -13,7 +13,6 @@ const momento = new SimpleCacheClient(config.authToken, config.defaultTtl, {
 export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
     for (const r of event.Records) {
         if (r.dynamodb) {
-            console.log(normalizeKeysFromAttributeValue(r.dynamodb.Keys));
             const recordKey = config.tableName + normalizeKeysFromAttributeValue(r.dynamodb.Keys);
             switch (r.eventName) {
                 case "INSERT":
