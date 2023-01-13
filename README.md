@@ -1,7 +1,10 @@
 # APIGateway with Lambdas, Momento and CRUD on DynamoDB
 
 This an example of an APIGateway, pointing to five Lambdas executing CRUD operations on a single DynamoDB table. We are using 
-[Momento's](https://gomomento.com) `@gomomento-poc/aws-cache-helpers` [package](https://www.npmjs.com/package/@gomomento-poc/aws-cache-helpers) to quickly provide a drop in caching solution ontop of our JS API. 
+[Momento's](https://gomomento.com) `@gomomento-poc/aws-cache-helpers` [package](https://www.npmjs.com/package/@gomomento-poc/aws-cache-helpers) to quickly provide a drop in caching solution ontop of our JS API runnning on AWS Lambda. This demo repo was originally from the aws cdk examples project [here](https://github.com/aws-samples/aws-cdk-examples/tree/master/typescript/api-cors-lambda-crud-dynamodb) and we added caching ontop. 
+
+
+![image](https://user-images.githubusercontent.com/5491827/212209590-45ac9d36-532a-459c-a8ea-154e8ac7733c.png)
 
 ## Build
 
