@@ -1,17 +1,7 @@
-# APIGateway with CORS, Lambdas, and CRUD on DynamoDB
-<!--BEGIN STABILITY BANNER-->
----
+# APIGateway with Lambdas, Momento and CRUD on DynamoDB
 
-![Stability: Stable](https://img.shields.io/badge/stability-Stable-success.svg?style=for-the-badge)
-
-> **This is a stable example. It should successfully build out of the box**
->
-> This examples is built on Construct Libraries marked "Stable" and does not have any infrastructure prerequisites to build.
-
----
-<!--END STABILITY BANNER-->
-
-This an example of an APIGateway with CORS enabled, pointing to five Lambdas executing CRUD operations on a single DynamoDB table.
+This an example of an APIGateway, pointing to five Lambdas executing CRUD operations on a single DynamoDB table. We are using 
+[Momento's](https://gomomento.com) `@gomomento-poc/aws-cache-helpers` [package](https://www.npmjs.com/package/@gomomento-poc/aws-cache-helpers) to quickly provide a drop in caching solution ontop of our JS API. 
 
 ## Build
 
@@ -64,4 +54,3 @@ After building your TypeScript code, you will be able to run the CDK toolkit com
     $ cdk diff
     <shows diff against deployed stack>
 ```
-# simple-alt-dax-demo
