@@ -20,7 +20,7 @@ This will install the necessary CDK, then this example's dependencies, then the 
 
 ## Deploy
 
-Run `cdk deploy`. This will deploy / redeploy your Stack to your AWS Account.
+Run `MOMENTO_AUTH_TOKEN=*** npm run cdk deploy`. This will deploy / redeploy your Stack to your AWS Account.
 
 After the deployment you will see the API's URL, which represents the url you can then use.
 
