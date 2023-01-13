@@ -1,8 +1,13 @@
-# APIGateway with Lambdas, Momento and CRUD on DynamoDB
+<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
+
+[![project status](https://momentohq.github.io/standards-and-practices/badges/project-status-official.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
+[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-experimental.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md) 
+
+
+# Momento AWS Cache Helpers Demo
 
 This an example of an APIGateway, pointing to five Lambdas executing CRUD operations on a single DynamoDB table. We are using 
 [Momento's](https://gomomento.com) `@gomomento-poc/aws-cache-helpers` [package](https://www.npmjs.com/package/@gomomento-poc/aws-cache-helpers) to quickly provide a drop in caching solution ontop of our JS API runnning on AWS Lambda. This demo repo was originally from the aws cdk examples project [here](https://github.com/aws-samples/aws-cdk-examples/tree/master/typescript/api-cors-lambda-crud-dynamodb) and we added caching ontop. 
-
 
 ![image](https://user-images.githubusercontent.com/5491827/212209590-45ac9d36-532a-459c-a8ea-154e8ac7733c.png)
 
@@ -29,11 +34,13 @@ After the deployment you will see the API's URL, which represents the url you ca
 The whole component contains:
 
 - An API, with CORS enabled on all HTTP Methods. (Use with caution, for production apps you will want to enable only a certain domain origin to be able to query your API.)
-- Lambda pointing to `lambdas/create.ts`, containing code for __storing__ an item  into the DynamoDB table.
-- Lambda pointing to `lambdas/delete-one.ts`, containing code for __deleting__ an item from the DynamoDB table.
-- Lambda pointing to `lambdas/get-all.ts`, containing code for __getting all items__ from the DynamoDB table.
-- Lambda pointing to `lambdas/get-one.ts`, containing code for __getting an item__ from the DynamoDB table.
-- Lambda pointing to `lambdas/update-one.ts`, containing code for __updating an item__ in the DynamoDB table.
+- Lambda pointing to `src/lambdas/create.ts`, containing code for __storing__ an item  into the DynamoDB table.
+- Lambda pointing to `src/lambdas/delete-one.ts`, containing code for __deleting__ an item from the DynamoDB table.
+- Lambda pointing to `src/lambdas/get-all.ts`, containing code for __getting all items__ from the DynamoDB table.
+- Lambda pointing to `src/lambdas/get-one.ts`, containing code for __getting an item__ from the DynamoDB table.
+- Lambda pointing to `src/lambdas/get-one-cached.ts`, containing code for __getting an item__ from the DynamoDB table but trying to use Momento as a read aside cache first.
+- Lambda pointing to `src/lambdas/update-one.ts`, containing code for __updating an item__ in the DynamoDB table.
+- Lambda pointing to `src/lambdas/stream-cacher.ts`, containing code for handling updates from the DynamoDB table and proactively updating your Momento cache.
 - A DynamoDB table `items` that stores the data.
 - Five `LambdaIntegrations` that connect these Lambdas to the API.
 
@@ -57,3 +64,6 @@ After building your TypeScript code, you will be able to run the CDK toolkit com
     $ cdk diff
     <shows diff against deployed stack>
 ```
+
+----------------------------------------------------------------------------------------
+For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
