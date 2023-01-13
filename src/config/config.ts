@@ -2,7 +2,7 @@
 export const config = {
     tableName: process.env.TABLE_NAME || '',
     primaryKey: process.env.PRIMARY_KEY || '',
-    defaultTtl: 3600,
+    defaultTtl: 86400,
     authToken: process.env.MOMENTO_AUTH_TOKEN || '',
     cacheName: 'default',
 }

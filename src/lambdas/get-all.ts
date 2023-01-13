@@ -1,12 +1,8 @@
-import {getCachingMiddleware} from "../middleware/ddb-cache";
 import {DynamoDBDocumentClient} from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
 
 const TABLE_NAME = process.env.TABLE_NAME || '';
 const db = DynamoDBDocumentClient.from(new DynamoDBClient({}));
-
-db.middlewareStack.use(getCachingMiddleware());
-
 export const handler = async (): Promise<any> => {
 
   const params = {

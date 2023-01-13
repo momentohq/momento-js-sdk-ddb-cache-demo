@@ -1,12 +1,18 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
-import {getCachingMiddleware} from "../middleware/ddb-cache";
+import {NewCachingMiddleware} from "@gomomento-poc/aws-cache-helpers";
+import {config} from "../config/config";
 
 const TABLE_NAME = process.env.TABLE_NAME || '';
 const PRIMARY_KEY = process.env.PRIMARY_KEY || '';
 
 const db = DynamoDBDocumentClient.from(new DynamoDBClient({}));
-db.middlewareStack.use(getCachingMiddleware());
+db.middlewareStack.use(NewCachingMiddleware({
+    tableName: config.tableName,
+    momentoAuthToken: config.authToken,
+    defaultCacheTtl: config.defaultTtl,
+    cacheName: config.cacheName
+}));
 
 
 export const handler = async (event: any = {}): Promise<any> => {
